@@ -1,14 +1,18 @@
 import React from 'react'
-import { useSelector } from "react-redux"
 import Todo from "./todo"
+import { useGetTasksQuery } from "../../store/api"
+import { Text } from "react-native"
 
 export default function TodoList() {
 
-  const todos = useSelector(state => state.tasks.todos)
+  const {data, isLoading, isError} = useGetTasksQuery()
+
+  if(isLoading) return <Text>Загрузка...</Text>
+  if(isError) return <Text>Ошибка загрузки</Text>
 
   return (
-    todos?.map(item => {
-      return <Todo item={item} key={String(item.id)} />
+    data.message.tasks.map(item => {
+      return <Todo item={item} key={item.email} />
     })
   )
 }

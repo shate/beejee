@@ -4,10 +4,12 @@ import { Formik } from 'formik'
 import * as yup from 'yup'
 import { useDispatch } from "react-redux"
 import { hideModal } from "../../store/sliceModals"
+import { useAuthMutation } from "../../store/api"
 
 export default function LoginForm() {
 
-   const dispatch = useDispatch()
+  const dispatch = useDispatch()
+  const [auth, {isError, isSuccess}] = useAuthMutation()
   const loginValidationSchema = yup.object().shape({
     password: yup
       .string()
@@ -17,13 +19,16 @@ export default function LoginForm() {
       .required('Поле является обязательным для заполнения'),
 
   })
+  const handleAuth = async (body) => {
+    await auth(body)
+  }
 
   return (
     <View>
       <Formik
         validationSchema={loginValidationSchema}
-        initialValues={{email: '', login: ''}}
-        onSubmit={values => console.log(values)}
+        initialValues={{username: '', password: ''}}
+        onSubmit={values => handleAuth(values)}
       >
         {({handleChange, handleBlur, handleSubmit, values, errors}) => (
           <View>
@@ -37,7 +42,7 @@ export default function LoginForm() {
                 placeholder="Ваш логин"
               />
               {errors.username &&
-                <Text style={{ fontSize: 10, color: 'red' }}>{errors.username}</Text>
+                <Text style={{fontSize: 10, color: 'red'}}>{errors.username}</Text>
               }
             </View>
             <View style={styles.wrap}>
@@ -51,13 +56,13 @@ export default function LoginForm() {
                 keyboardType="numeric"
               />
               {errors.password &&
-                <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
+                <Text style={{fontSize: 10, color: 'red'}}>{errors.password}</Text>
               }
             </View>
             <View style={styles.controls}>
-                <Button onPress={() => dispatch(hideModal())} title="Отмена" />
+              <Button onPress={() => dispatch(hideModal())} title="Отмена" />
               <View style={styles.separator} />
-                <Button onPress={handleSubmit} title="Отправить" />
+              <Button onPress={handleSubmit} title="Отправить" />
             </View>
           </View>
         )}

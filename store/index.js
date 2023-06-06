@@ -1,13 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit"
-import tasks from './sliceTasks'
 import modals from './sliceModals'
-import api from './sliceApi'
+import api, { tasksApi } from './api'
 
 const store = configureStore({
   reducer: {
-    tasks,
     modals,
-    api
-  }
+    api,
+    [tasksApi.reducerPath]: tasksApi.reducer,
+  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(tasksApi.middleware)
 })
 export default store

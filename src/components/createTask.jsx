@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Button, StyleSheet, Text, TextInput, View } from "react-native"
 import { Formik } from 'formik'
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { hideModal } from "../../store/sliceModals"
 import * as yup from "yup"
+import { useAddTaskMutation } from "../../store/api"
 
 export default function CreateTaskForm() {
 
@@ -20,18 +21,40 @@ export default function CreateTaskForm() {
       .required('Поле является обязательным для заполнения'),
   })
 
+  const timerRef = useRef(null)
+  const showModal = useSelector(state => state.modals.showModal)
   const dispatch = useDispatch()
+  const [addTask, {isError, isSuccess}] = useAddTaskMutation()
+
+  useEffect(() => {
+    if (!showModal) {
+      return clearTimeout(timerRef.current)
+    }
+  }, [showModal])
+  const handleAddTask = async (body) => {
+    await addTask(body)
+  }
+  const closeModal = () => timerRef.current = setTimeout(() => dispatch(hideModal()), 500)
+
+  if (isSuccess) {
+    closeModal()
+    return <Text>Ваша задача добавлена!</Text>
+  }
+  if (isError) {
+    closeModal()
+    return <Text>Задача не добавлена. Попробуйте еще раз</Text>
+  }
 
   return (
     <View>
       <Formik
         validationSchema={loginValidationSchema}
-        initialValues={{email: '', username: '', text: '' }}
-        onSubmit={values => console.log(values)}
+        initialValues={{email: '', username: '', text: ''}}
+        onSubmit={values => handleAddTask(values)}
       >
         {({handleChange, handleBlur, handleSubmit, values, errors}) => (
           <View>
-            <View  style={styles.wrap}>
+            <View style={styles.wrap}>
               <Text>Исполнитель</Text>
               <TextInput
                 onChangeText={handleChange('username')}
@@ -41,10 +64,10 @@ export default function CreateTaskForm() {
                 placeholder="Введите имя"
               />
               {errors.username &&
-                <Text style={{ fontSize: 10, color: 'red' }}>{errors.username}</Text>
+                <Text style={{fontSize: 10, color: 'red'}}>{errors.username}</Text>
               }
             </View>
-            <View  style={styles.wrap}>
+            <View style={styles.wrap}>
               <Text>Email</Text>
               <TextInput
                 onChangeText={handleChange('email')}
@@ -55,10 +78,10 @@ export default function CreateTaskForm() {
                 placeholder="Введите Email"
               />
               {errors.email &&
-                <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
+                <Text style={{fontSize: 10, color: 'red'}}>{errors.email}</Text>
               }
             </View>
-            <View  style={styles.wrap}>
+            <View style={styles.wrap}>
               <Text>Задача</Text>
               <TextInput
                 onChangeText={handleChange('text')}
@@ -70,7 +93,7 @@ export default function CreateTaskForm() {
 
               />
               {errors.text &&
-                <Text style={{ fontSize: 10, color: 'red' }}>{errors.text}</Text>
+                <Text style={{fontSize: 10, color: 'red'}}>{errors.text}</Text>
               }
             </View>
             <View style={styles.controls}>

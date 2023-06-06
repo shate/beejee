@@ -31,6 +31,7 @@ function App() {
         <Header />
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
+          style={styles.scroll}
           >
           <View style={styles.sectionContainer}>
            <TodoList />
@@ -47,7 +48,9 @@ const styles = StyleSheet.create({
     marginTop: 32,
     paddingHorizontal: 10,
   },
-
+  scroll: {
+    marginBottom: 70
+  }
 });
 
 export default App;
