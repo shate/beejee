@@ -9,10 +9,9 @@ import React from 'react'
 
 import {
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
-  View,
+
 } from 'react-native'
 
 import { Provider } from "react-redux"
@@ -24,17 +23,10 @@ import Modals from "./src/components/modals"
 function App() {
   return (
     <Provider store={store}>
-      <SafeAreaView>
+      <SafeAreaView style={styles.sectionContainer}>
         <StatusBar />
         <Header />
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scroll}
-        >
-          <View style={styles.sectionContainer}>
-            <TodoList />
-          </View>
-        </ScrollView>
+        <TodoList />
         <Modals />
       </SafeAreaView>
     </Provider>
@@ -43,12 +35,9 @@ function App() {
 
 const styles = StyleSheet.create({
   sectionContainer: {
-    marginTop: 32,
     paddingHorizontal: 10,
+    flex: 1
   },
-  scroll: {
-    marginBottom: 70
-  }
 })
 
 export default App

@@ -6,7 +6,10 @@ export const tasksApi = createApi({
   baseQuery: fetchBaseQuery({baseUrl: 'https://uxcandy.com/~shapoval/test-task-backend/v2'}),
   endpoints: build => ({
     getTasks: build.query({
-      query: () => '/?developer=Name',
+      query: (data) => {
+        console.log('ddd', data)
+        return `/?developer=Name&page=${data.page ? data.page : 1}`
+      },
       providesTags: (result) =>
         result.message.task
           ? [

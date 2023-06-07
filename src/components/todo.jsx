@@ -75,8 +75,9 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: '#5d6869',
-    marginBottom: 10,
+    marginVertical: 10,
     padding: 10,
+    minHeight:'30%'
   },
   info: {
     flexGrow: 1,
