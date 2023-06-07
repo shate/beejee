@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, TextInput, Button, Switch } from "react-native"
-import { useDispatch, useSelector } from "react-redux"
+import { View, Text, StyleSheet, Button } from "react-native"
+import {  useSelector } from "react-redux"
 import EditTodoForm from "./editTodoForm"
 
 export default function Todo({task}) {
 
-  const isAdmin = useSelector(state => state.api.isAdmin )
+  const isAdmin = useSelector(state => Boolean(state.auth.token))
   const [editable, setEditable] = useState(false)
-
-  const [isEnabled, setIsEnabled] = useState(Boolean(task.status))
-
-  const dispatch = useDispatch()
 
   const options = [
     {name: 'Задача не выполнена', id: 0},
@@ -20,15 +16,22 @@ export default function Todo({task}) {
   ]
   const defaultOption = options.find(item => item.id === task.status)
 
+  useEffect(()=> {
+
+     if(!isAdmin)  {
+       setEditable(false)
+     }
+  }, [isAdmin])
+
   return (
-    <View style={[styles.container, isEnabled && styles.completed]}>
+    <View style={[styles.container]}>
       <View>
         {
-         ! isAdmin
-          ? <View style={styles.edit}>
-              <Button title={'Редактировать'} onPress={() => setEditable(!editable)}/>
+          isAdmin
+            ? <View style={styles.edit}>
+              <Button title={'Редактировать'} onPress={() => setEditable(!editable)} />
             </View>
-           : null
+            : null
         }
         <View style={styles.info}>
           <View>
@@ -47,13 +50,13 @@ export default function Todo({task}) {
       </View>
       {
         editable
-        ?  <EditTodoForm
+          ? <EditTodoForm
             styles={styles}
             task={task}
             options={options}
             defaultOption={defaultOption.id}
           />
-         : <View>
+          : <View>
             <Text style={styles.label}>Что сделать:</Text>
             <View style={editable && styles.wrap}>
               <Text style={styles.label}>{task.text}</Text>
@@ -74,9 +77,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#5d6869',
     marginBottom: 10,
     padding: 10,
-  },
-  completed: {
-    backgroundColor: '#2f96a4',
   },
   info: {
     flexGrow: 1,
@@ -110,15 +110,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexDirection: 'row',
     justifyContent: 'flex-end'
-  },
-  switch: {
-    flexGrow: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  switchLabel: {
-    marginTop: 4
   },
   btn: {
     marginLeft: 10,

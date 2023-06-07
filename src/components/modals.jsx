@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Modal, View, StyleSheet } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
-import { hideModal } from "../../store/sliceModals"
+import { hideModal } from "../../store/modalsSlice"
 import LoginForm from "./loginForm"
 import CreateTaskForm from "./createTask"
 

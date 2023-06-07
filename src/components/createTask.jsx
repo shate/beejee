@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { Button, StyleSheet, Text, TextInput, View } from "react-native"
 import { Formik } from 'formik'
 import { useDispatch, useSelector } from "react-redux"
-import { hideModal } from "../../store/sliceModals"
+import { hideModal } from "../../store/modalsSlice"
 import * as yup from "yup"
 import { useAddTaskMutation } from "../../store/api"
 

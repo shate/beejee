@@ -15,15 +15,13 @@ import {
   View,
 } from 'react-native'
 
-
-import { Provider } from "react-redux";
-import store from "./store";
-import Header from "./src/components/header";
+import { Provider } from "react-redux"
+import store from "./store"
+import Header from "./src/components/header"
 import TodoList from "./src/components/todoList"
 import Modals from "./src/components/modals"
 
 function App() {
-
   return (
     <Provider store={store}>
       <SafeAreaView>
@@ -32,15 +30,15 @@ function App() {
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scroll}
-          >
+        >
           <View style={styles.sectionContainer}>
-           <TodoList />
+            <TodoList />
           </View>
         </ScrollView>
         <Modals />
       </SafeAreaView>
     </Provider>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -51,6 +49,6 @@ const styles = StyleSheet.create({
   scroll: {
     marginBottom: 70
   }
-});
+})
 
-export default App;
+export default App

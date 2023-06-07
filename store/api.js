@@ -1,6 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit"
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-//
+
 export const tasksApi = createApi({
   reducerPath: 'tasksApi',
   tagTypes: ['Tasks'],
@@ -36,6 +35,8 @@ export const tasksApi = createApi({
       query: (body) => {
         const data = new FormData()
         data.append("text", body.text)
+        data.append("status", body.status)
+        data.append("token", body.token)
         return {
           url: `/edit/:${body.id}?developer=Example`,
           method: 'POST',
@@ -47,6 +48,7 @@ export const tasksApi = createApi({
 
     auth: build.mutation({
       query: (body) => {
+        console.log('body', body)
         const data = new FormData()
         data.append("username", body.username)
         data.append("password", body.password)
@@ -55,25 +57,10 @@ export const tasksApi = createApi({
           method: 'POST',
           body: data
         }
-      }
+      },
     })
   })
-
 })
 export const {useGetTasksQuery, useAddTaskMutation, useEditTaskMutation, useAuthMutation} = tasksApi
 
-const apiSlice = createSlice({
-  name: 'api',
-  initialState: {
-    isAdmin: false
-  },
-  reducers: {
-    auth(state, action) {
-      console.log(action)
-    }
-  }
-})
 
-export const {auth} = apiSlice.actions
-
-export default apiSlice.reducer

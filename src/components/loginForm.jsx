@@ -3,9 +3,9 @@ import { Button, StyleSheet, Text, TextInput, View } from "react-native"
 import { Formik } from 'formik'
 import * as yup from 'yup'
 import { useDispatch } from "react-redux"
-import { hideModal } from "../../store/sliceModals"
+import { hideModal } from "../../store/modalsSlice"
 import { useAuthMutation } from "../../store/api"
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
 export default function LoginForm() {
 
   const dispatch = useDispatch()
@@ -20,7 +20,12 @@ export default function LoginForm() {
 
   })
   const handleAuth = async (body) => {
-    await auth(body)
+    const login = await auth(body)
+
+    AsyncStorage.setItem('token', JSON.stringify({
+      token: login.data.message.token,
+      time: Date.now()
+    }))
   }
 
   return (
