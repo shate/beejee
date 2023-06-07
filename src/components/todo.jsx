@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, TextInput, Button, Switch } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
+import EditTodoForm from "./editTodoForm"
 
-export default function Todo({item}) {
+export default function Todo({task}) {
 
   const isAdmin = useSelector(state => state.api.isAdmin )
   const [editable, setEditable] = useState(false)
-  const [task, onChangeText] = useState(item)
-  const [isEnabled, setIsEnabled] = useState(Boolean(item.status))
+
+  const [isEnabled, setIsEnabled] = useState(Boolean(task.status))
 
   const dispatch = useDispatch()
+
+  const options = [
+    {name: 'Задача не выполнена', id: 0},
+    {name: 'Задача не выполнена, отредактирована админом', id: 1},
+    {name: 'Задача выполнена', id: 10},
+    {name: 'Задача отредактирована админом и выполнена', id: 11},
+  ]
+  const defaultOption = options.find(item => item.id === task.status)
 
   return (
     <View style={[styles.container, isEnabled && styles.completed]}>
@@ -25,70 +34,34 @@ export default function Todo({item}) {
           <View>
             <Text style={styles.label}>Исполнитель:</Text>
             <View>
-              <TextInput
-                style={styles.text}
-                maxLength={100}
-                value={task.username}
-                editable={false}
-              />
+              <Text style={styles.label}>{task.username}</Text>
             </View>
           </View>
           <View>
             <Text style={styles.label}>Email:</Text>
             <View>
-              <TextInput
-                style={styles.text}
-                maxLength={100}
-                value={task.email}
-                editable={false}
-              />
+              <Text style={styles.label}>{task.email}</Text>
             </View>
-          </View>
-        </View>
-        <View>
-          <Text style={styles.label}>Что сделать:</Text>
-          <View style={editable && styles.wrap}>
-            <TextInput
-              style={styles.text}
-              editable={editable}
-              multiline
-              maxLength={100}
-              value={task.text}
-              onChangeText={value => onChangeText({...task, text: value})}
-            />
           </View>
         </View>
       </View>
       {
         editable
-        ?  <View style={ styles.controls}>
-            <View style={styles.switch}>
-              <View style={editable && styles.wrap}>
-              <TextInput
-                style={styles.text}
-                editable={editable}
-                value={task.status}
-                keyboardType="numeric"
-                onChangeText={value => onChangeText({...task, status: value})}
-              />
-              </View>
-
-              <Text style={[styles.label, styles.switchLabel]}>Статус</Text>
+        ?  <EditTodoForm
+            styles={styles}
+            task={task}
+            options={options}
+            defaultOption={defaultOption.id}
+          />
+         : <View>
+            <Text style={styles.label}>Что сделать:</Text>
+            <View style={editable && styles.wrap}>
+              <Text style={styles.label}>{task.text}</Text>
             </View>
-            <View style={styles.btns}>
-              <View style={styles.btn}>
-                <Button title={'Сохранить'} onPress={() => dispatch()} />
-              </View>
-              <View style={styles.btn}>
-                <Button title={'Отменить'} onPress={() => {
-                  onChangeText(item)
-                  setIsEnabled(Boolean(item.status))
-                }
-                } />
-              </View>
+            <View>
+              <Text style={styles.label}>{defaultOption.name}</Text>
             </View>
           </View>
-         : null
       }
 
     </View>

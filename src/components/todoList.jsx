@@ -12,7 +12,7 @@ export default function TodoList() {
 
   return (
     data.message.tasks.map(item => {
-      return <Todo item={item} key={item.email} />
+      return <Todo task={item} key={item.email} />
     })
   )
 }
