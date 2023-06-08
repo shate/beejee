@@ -9,6 +9,7 @@ const store = configureStore({
     auth,
     [tasksApi.reducerPath]: tasksApi.reducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(tasksApi.middleware)
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(tasksApi.middleware),
+  serializableCheck: false
 })
 export default store

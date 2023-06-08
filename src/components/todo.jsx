@@ -73,11 +73,9 @@ export default function Todo({task}) {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
     backgroundColor: '#5d6869',
-    marginVertical: 10,
     padding: 10,
-    minHeight:'30%'
+    //minHeight:'45%'
   },
   info: {
     flexGrow: 1,
