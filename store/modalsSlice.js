@@ -28,7 +28,7 @@ const modalsSlice = createSlice({
       state.showFilter = false
     },
     setShowFilter(state) {
-      state.showModal = false
+      state.showModal = true
       state.showAddTask = false
       state.showLogin = false
       state.showFilter = true

@@ -29,7 +29,7 @@ export default function LoginForm() {
   }
 
   return (
-    <View>
+    <>
       <Formik
         validationSchema={loginValidationSchema}
         initialValues={{username: '', password: ''}}
@@ -72,7 +72,7 @@ export default function LoginForm() {
           </View>
         )}
       </Formik>
-    </View>
+    </>
   )
 }
 

@@ -8,7 +8,7 @@ export const tasksApi = createApi({
     getTasks: build.query({
       query: (data) => {
         console.log('ddd', data)
-        return `/?developer=Name&page=${data.page ? data.page : 1}`
+        return `/?developer=Name&page=${data.page ? data.page : 1}&sort_field=${data.sort_field}&sort_direction=${data.sort_direction}`
       },
       providesTags: (result) =>
         result.message.task

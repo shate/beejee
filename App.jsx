@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import {
   FlatList,
@@ -18,20 +18,32 @@ import Header from "./src/components/header"
 import Modals from "./src/components/modals"
 import { useGetTasksQuery } from "./store/api"
 import Todo from "./src/components/todo"
+import { useDispatch, useSelector } from "react-redux"
+import { setPage } from "./store/filterSlice"
 
 function App() {
 
-  const [page, setPage] = useState(1)
-  const {data, isLoading, isError} = useGetTasksQuery({page})
+  const dispatch = useDispatch()
+  const queryParams = useSelector ( state => state.filter.data)
+  const {data, isLoading, isError} = useGetTasksQuery(queryParams)
   const count = Math.ceil(data?.message.total_task_count / 3)
   const flatListRef = useRef()
+  const [copyPage, setCopyPage] = useState(1)
+
+  console.log(queryParams)
 
   const pagination = () => {
-    console.log('bbbbb', page < count)
-    if (page < count) {
-      setPage(prev => prev + 1)
+  //  console.log('bbbbb', page < count)
+    if (copyPage < count) {
+      setCopyPage(prev => prev + 1)
     }
   }
+
+  useEffect(() => {
+    dispatch(setPage(copyPage))
+    },
+    [copyPage]
+  )
 
   if (isLoading) return <Text>Загрузка...</Text>
   if (isError) return <Text>Ошибка загрузки</Text>
@@ -41,16 +53,20 @@ function App() {
 
       <SafeAreaView style={styles.sectionContainer}>
         <Header />
-        <FlatList
-          ref={flatListRef}
-          data={data.message.tasks}
-          renderItem={item => <Todo task={item.item} key={item.item.email} />}
-          keyExtractor={item => item.id}
-          onEndReachedThreshold={0.01}
-          onEndReached={pagination}
-          contentContainerStyle={styles.container}
-          ItemSeparatorComponent={ItemSeparatorView}
-        />
+        {
+          data ?  <FlatList
+            ref={flatListRef}
+            data={data.message.tasks}
+            renderItem={item => <Todo task={item.item} key={item.item.email} />}
+            keyExtractor={item => item.id}
+            onEndReachedThreshold={0.01}
+            onEndReached={pagination}
+            contentContainerStyle={styles.container}
+            ItemSeparatorComponent={ItemSeparatorView}
+          />
+            : null
+        }
+
         <Modals />
       </SafeAreaView>
 
