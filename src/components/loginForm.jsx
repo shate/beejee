@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux"
 import { hideModal } from "../../store/modalsSlice"
 import { useAuthMutation } from "../../store/api"
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { setToken } from "../../store/authSlice"
 export default function LoginForm() {
 
   const dispatch = useDispatch()
@@ -25,10 +26,13 @@ export default function LoginForm() {
     console.log('login.data.message', login.data.status)
     if(login.data.status !== 'error'){
       setError('')
+      console.log(login.data.message.token)
       AsyncStorage.setItem('token', JSON.stringify({
         token: login.data.message.token,
         time: Date.now()
       }))
+      dispatch(setToken(login.data.message.token))
+      dispatch( hideModal())
     }
     else{
       setError(login.data.message.password)
