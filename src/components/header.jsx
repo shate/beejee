@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, StyleSheet, View } from "react-native"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { setShowAddTask, setShowFilter, setShowLogin } from "../../store/modalsSlice"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { setToken } from "../../store/authSlice"
@@ -8,6 +8,7 @@ import Navigation from "./navigation"
 
 export default function Header({count, swipe}) {
 
+  const isToken = useSelector( state => state.auth.token)
   const [isAdmin, setIsAdmin] = useState(false)
   const [copyToken, setCopyToken] = useState(false)
   const dispatch = useDispatch()
@@ -31,6 +32,10 @@ export default function Header({count, swipe}) {
   useEffect(() => {
     getToken()
   }, [])
+
+  useEffect(() => {
+    isToken && setIsAdmin(true)
+  }, [isToken])
 
   return (
     <View style={styles.container}>
@@ -59,6 +64,7 @@ export default function Header({count, swipe}) {
     </View>
   )
 }
+
 const styles = StyleSheet.create({
   container: {
     marginVertical: 10,

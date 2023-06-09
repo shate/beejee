@@ -6,7 +6,6 @@ import { useEffect, useState } from "react"
 export default function Navigation({count, swipe}) {
   const dispatch = useDispatch()
   const [copyPage, setCopyPage] = useState(1)
-
   const pagination = (right = false) => {
     if (right) {
       if (copyPage < count) {
@@ -20,12 +19,11 @@ export default function Navigation({count, swipe}) {
   }
 
   useEffect(() => {
-    if(swipe){
+    if (swipe) {
       swipe === 'left' ? pagination(true) : pagination()
     }
 
   }, [swipe])
-
 
   useEffect(() => {
       dispatch(setPage(copyPage))

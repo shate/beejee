@@ -3,14 +3,13 @@ import { Button, StyleSheet, Text, View } from "react-native"
 import { hideModal } from "../../store/modalsSlice"
 import { useDispatch } from "react-redux"
 import { setDirection, setField } from "../../store/filterSlice"
-
 export default function FiltersModal() {
 
   const dispatch = useDispatch()
   const handler = (type = '', isField = '') => {
     dispatch(hideModal())
 
-    if(type){
+    if (type) {
       return isField ? dispatch(setField(type)) : dispatch(setDirection(type))
     }
     dispatch(setField(''))
@@ -35,13 +34,16 @@ export default function FiltersModal() {
         <View>
           <View style={styles.inner}>
             <Button onPress={() => handler()} title="Сбросить" />
-          <Button onPress={() => {dispatch(hideModal())}} title="Закрыть" />
+            <Button onPress={() => {
+              dispatch(hideModal())
+            }} title="Закрыть" />
           </View>
         </View>
       </View>
     </>
   )
 }
+
 const styles = StyleSheet.create({
   container: {
     width: '80%'

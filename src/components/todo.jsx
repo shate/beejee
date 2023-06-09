@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Button } from "react-native"
-import {  useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import EditTodoForm from "./editTodoForm"
-
 export default function Todo({task}) {
 
   const isAdmin = useSelector(state => Boolean(state.auth.token))
@@ -16,11 +15,11 @@ export default function Todo({task}) {
   ]
   const defaultOption = options.find(item => item.id === task.status)
 
-  useEffect(()=> {
+  useEffect(() => {
 
-     if(!isAdmin)  {
-       setEditable(false)
-     }
+    if (!isAdmin) {
+      setEditable(false)
+    }
   }, [isAdmin])
 
   return (
@@ -66,7 +65,6 @@ export default function Todo({task}) {
             </View>
           </View>
       }
-
     </View>
   )
 }
