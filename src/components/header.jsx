@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { setToken } from "../../store/authSlice"
 import Navigation from "./navigation"
 
-export default function Header({count}) {
+export default function Header({count, swipe}) {
 
   const [isAdmin, setIsAdmin] = useState(false)
   const [copyToken, setCopyToken] = useState(false)
@@ -52,7 +52,10 @@ export default function Header({count}) {
         }} />
 
       </View>
-      <Navigation count={count}/>
+      <Navigation
+        count={count}
+        swipe={swipe}
+      />
     </View>
   )
 }
@@ -63,7 +66,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10
   },
   header: {
-   marginBottom: 20,
+    marginBottom: 20,
     flexDirection: 'row',
     justifyContent: 'space-between'
   }

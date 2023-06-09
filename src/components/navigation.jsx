@@ -3,12 +3,11 @@ import { useDispatch } from "react-redux"
 import { setPage } from "../../store/filterSlice"
 import { useEffect, useState } from "react"
 
-export default function Navigation({count}) {
+export default function Navigation({count, swipe}) {
   const dispatch = useDispatch()
   const [copyPage, setCopyPage] = useState(1)
 
   const pagination = (right = false) => {
-    //  console.log('bbbbb', page < count)
     if (right) {
       if (copyPage < count) {
         setCopyPage(prev => prev + 1)
@@ -19,6 +18,14 @@ export default function Navigation({count}) {
       }
     }
   }
+
+  useEffect(() => {
+    if(swipe){
+      swipe === 'left' ? pagination(true) : pagination()
+    }
+
+  }, [swipe])
+
 
   useEffect(() => {
       dispatch(setPage(copyPage))

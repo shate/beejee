@@ -5,42 +5,62 @@
  * @format
  */
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   SafeAreaView,
   ScrollView,
-  StyleSheet,
+  StyleSheet, Text,
   View,
 } from 'react-native'
 
 import Header from "./src/components/header"
-import TodoList from "./src/components/todoList"
 import Modals from "./src/components/modals"
 import { useSelector } from "react-redux"
 import { useGetTasksQuery } from "./store/api"
-function App() {
+import GestureRecognizer from 'react-native-swipe-gestures'
+import Todo from "./src/components/todo"
 
-  const queryParams = useSelector ( state => state.filter.data)
+function App() {
+  const [swipe, setSwipe] = useState('')
+  const queryParams = useSelector(state => state.filter.data)
   const {data, isLoading, isError} = useGetTasksQuery(queryParams)
   const count = Math.ceil(data?.message.total_task_count / 3)
 
+
+  useEffect(() => {
+    setSwipe('')
+
+  }, [queryParams.page])
+
   return (
-      <SafeAreaView style={{position: 'relative'}}>
-        <Header count={count} />
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scroll}
-        >
-          <View style={styles.sectionContainer}>
-            <TodoList
-              data={data.message.tasks}
-              isLoading={isLoading}
-              isError={isError}
-            />
-          </View>
-        </ScrollView>
-        <Modals />
-      </SafeAreaView>
+    <SafeAreaView style={{position: 'relative'}}>
+      <Header
+        count={count}
+        swipe={swipe}
+      />
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        style={styles.scroll}
+      >
+        <View style={styles.sectionContainer}>
+          <GestureRecognizer
+            onSwipeRight={() => setSwipe('right')}
+            onSwipeLeft={() => setSwipe('left')}
+          >
+            {
+              isLoading && <Text>Загрузка...</Text>
+            }
+            {
+              isError && <Text>Ошибка загрузки</Text>
+            }
+            {
+              data?.message.tasks.map(item => <Todo task={item} key={item.id} />)
+            }
+          </GestureRecognizer>
+        </View>
+      </ScrollView>
+      <Modals />
+    </SafeAreaView>
   )
 }
 
