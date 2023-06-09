@@ -26,7 +26,6 @@ function App() {
   const {data, isLoading, isError} = useGetTasksQuery(queryParams)
   const count = Math.ceil(data?.message.total_task_count / 3)
 
-
   useEffect(() => {
     setSwipe('')
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, StyleSheet, Text, TextInput, View } from "react-native"
 import { Formik } from 'formik'
 import * as yup from 'yup'
@@ -9,7 +9,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 export default function LoginForm() {
 
   const dispatch = useDispatch()
-  const [auth, {isError, isSuccess}] = useAuthMutation()
+  const [auth] = useAuthMutation()
+  const [error, setError] = useState('')
   const loginValidationSchema = yup.object().shape({
     password: yup
       .string()
@@ -21,12 +22,20 @@ export default function LoginForm() {
   })
   const handleAuth = async (body) => {
     const login = await auth(body)
+    console.log('login.data.message', login.data.status)
+    if(login.data.status !== 'error'){
+      setError('')
+      AsyncStorage.setItem('token', JSON.stringify({
+        token: login.data.message.token,
+        time: Date.now()
+      }))
+    }
+    else{
+      setError(login.data.message.password)
+    }
 
-    AsyncStorage.setItem('token', JSON.stringify({
-      token: login.data.message.token,
-      time: Date.now()
-    }))
   }
+
 
   return (
     <>
@@ -64,6 +73,9 @@ export default function LoginForm() {
                 <Text style={{fontSize: 10, color: 'red'}}>{errors.password}</Text>
               }
             </View>
+            {
+             error && <Text style={{fontSize: 10, color: 'red', marginTop: -10, marginBottom: 10}}>{error}</Text>
+            }
             <View style={styles.controls}>
               <Button onPress={() => dispatch(hideModal())} title="Отмена" />
               <View style={styles.separator} />
