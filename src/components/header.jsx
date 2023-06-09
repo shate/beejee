@@ -4,8 +4,9 @@ import { useDispatch } from "react-redux"
 import { setShowAddTask, setShowFilter, setShowLogin } from "../../store/modalsSlice"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { setToken } from "../../store/authSlice"
+import Navigation from "./navigation"
 
-export default function Header() {
+export default function Header({count}) {
 
   const [isAdmin, setIsAdmin] = useState(false)
   const [copyToken, setCopyToken] = useState(false)
@@ -32,28 +33,37 @@ export default function Header() {
   }, [])
 
   return (
-    <View style={styles.header}>
-      <Button title={'Добавить задачу'} onPress={() => dispatch(setShowAddTask())} />
-      <Button title={'Фильтры'} onPress={() => dispatch(setShowFilter())} />
-      <Button title={isAdmin ? 'Выйти' : 'Войти'} onPress={() => {
-        if (isAdmin) {
-          setIsAdmin(false)
-          dispatch(setToken(false))
-        } else {
-          if (copyToken) {
-            setIsAdmin(true)
-            dispatch(setToken(copyToken))
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Button title={'Добавить задачу'} onPress={() => dispatch(setShowAddTask())} />
+        <Button title={'Фильтры'} onPress={() => dispatch(setShowFilter())} />
+        <Button title={isAdmin ? 'Выйти' : 'Войти'} onPress={() => {
+          if (isAdmin) {
+            setIsAdmin(false)
+            dispatch(setToken(false))
           } else {
-            dispatch(setShowLogin())
+            if (copyToken) {
+              setIsAdmin(true)
+              dispatch(setToken(copyToken))
+            } else {
+              dispatch(setShowLogin())
+            }
           }
-        }
-      }} />
+        }} />
+
+      </View>
+      <Navigation count={count}/>
     </View>
   )
 }
 const styles = StyleSheet.create({
-  header: {
+  container: {
     marginVertical: 10,
+    paddingBottom: 10,
+    paddingHorizontal: 10
+  },
+  header: {
+   marginBottom: 20,
     flexDirection: 'row',
     justifyContent: 'space-between'
   }

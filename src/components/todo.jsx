@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#5d6869',
     padding: 10,
+    marginBottom: 10
     //minHeight:'45%'
   },
   info: {
